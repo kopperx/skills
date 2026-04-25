@@ -1,8 +1,6 @@
 ---
 name: gpt-image-api
-description: Use this skill for GPT Image or OpenAI Image API work that is more than a one-off answer: generating images, editing images, combining reference images, carrying image context across turns, or building a reusable Python CLI around image generation. Trigger even if the user does not explicitly ask for a skill when they are clearly asking for image generation automation or an OpenAI image script.
-argument-hint: [image task or prompt]
-allowed-tools: Read, Write, Edit, Bash(*), Grep, Glob
+description: Use this skill for GPT Image or OpenAI Image API work that is more than a one-off answer generating images, editing images, combining reference images, carrying image context across turns, or building a reusable Python CLI around image generation. Trigger even if the user does not explicitly ask for a skill when they are clearly asking for image generation automation or an OpenAI image script.
 ---
 
 # GPT Image API
