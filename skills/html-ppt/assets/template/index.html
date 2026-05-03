@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XXX Academic Talk</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./presenter.js" defer></script>
+</head>
+<body>
+  <main class="deck" data-width="1280" data-height="720" aria-label="XXX academic presentation">
+    <section class="slide slide-title" data-title="Title">
+      <div class="title-copy">
+        <p class="kicker">Academic Presentation</p>
+        <h1>XXX：面向复杂问题的简洁研究框架</h1>
+        <p class="lead">用清晰的问题定义、可复现实验与可解释结果，构建一套适合学术汇报的研究叙事。</p>
+        <div class="meta">
+          <span>Presenter Name</span>
+          <span>Institution</span>
+          <span>2026</span>
+        </div>
+      </div>
+      <div class="title-mark" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <aside class="notes">开场说明研究主题、汇报对象和整体目标。强调这是一套可替换内容的学术汇报模板。</aside>
+      <footer>XXX Research Talk <strong>01 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Research Context">
+      <p class="kicker">01 · Research Context</p>
+      <h2>XXX 正在成为跨领域问题的关键变量</h2>
+      <div class="two-column">
+        <div class="point-list">
+          <article class="point">
+            <span>1</span>
+            <div>
+              <h3>应用需求增长</h3>
+              <p>真实场景对准确性、效率与可解释性的要求同步提升。</p>
+            </div>
+          </article>
+          <article class="point">
+            <span>2</span>
+            <div>
+              <h3>现有方法受限</h3>
+              <p>传统方法常在泛化能力、资源消耗与鲁棒性之间折中。</p>
+            </div>
+          </article>
+          <article class="point">
+            <span>3</span>
+            <div>
+              <h3>研究窗口明确</h3>
+              <p>新的数据、模型与评估工具提供了系统改进的路径。</p>
+            </div>
+          </article>
+        </div>
+        <div class="statement">
+          <strong>核心问题不是“能否提升指标”，而是如何在真实约束下稳定提升。</strong>
+          <p>本汇报围绕问题定义、方法设计、实验验证与未来扩展展开。</p>
+        </div>
+      </div>
+      <aside class="notes">这一页先建立研究动机：需求增长、方法瓶颈和研究机会。用一句话把听众带到核心问题。</aside>
+      <footer>Background <strong>02 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Problem Definition">
+      <p class="kicker">02 · Problem Definition</p>
+      <h2>在性能、成本与可解释性之间寻找更优解</h2>
+      <div class="two-column">
+        <div>
+          <p class="lead compact">我们将 XXX 抽象为多目标优化问题：在有限资源下获得稳定、可复现的性能提升。</p>
+          <div class="mini-grid">
+            <article>
+              <h3>Input</h3>
+              <p>多源数据、任务约束与计算预算。</p>
+            </article>
+            <article>
+              <h3>Output</h3>
+              <p>可验证的预测、决策或结构化中间结果。</p>
+            </article>
+          </div>
+        </div>
+        <div class="axis-card" aria-label="effectiveness efficiency diagram">
+          <span class="axis-y">Effectiveness</span>
+          <span class="axis-x">Efficiency</span>
+          <i class="dot dot-a"></i>
+          <i class="dot dot-b"></i>
+          <i class="dot dot-c"></i>
+          <i class="dot dot-d"></i>
+        </div>
+      </div>
+      <aside class="notes">解释横轴和纵轴分别代表效率与效果，说明本研究关注的是两个目标之间的平衡。</aside>
+      <footer>Problem Definition <strong>03 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Contributions">
+      <p class="kicker">03 · Contributions</p>
+      <h2>本文工作的三个核心贡献</h2>
+      <div class="takeaways">
+        <article>
+          <h3>统一建模</h3>
+          <p>把分散流程收敛为一个可分析、可复现、可比较的问题框架。</p>
+        </article>
+        <article>
+          <h3>模块化方法</h3>
+          <p>解耦表示、推理与校准逻辑，降低实验替换成本。</p>
+        </article>
+        <article>
+          <h3>系统性验证</h3>
+          <p>通过主实验、消融和误差分析定位真实收益与失败边界。</p>
+        </article>
+      </div>
+      <aside class="notes">逐条讲贡献，不要展开过细。重点是告诉听众后面的方法和实验会围绕这三点展开。</aside>
+      <footer>Contributions <strong>04 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Method Overview">
+      <p class="kicker">04 · Method Overview</p>
+      <h2>从输入建模到结果校准的四阶段流程</h2>
+      <div class="pipeline">
+        <article>
+          <h3>数据整理</h3>
+          <p>清洗输入，统一格式，并保留关键元信息。</p>
+        </article>
+        <article>
+          <h3>特征建模</h3>
+          <p>构建任务相关表示，减少噪声并强化泛化信号。</p>
+        </article>
+        <article>
+          <h3>核心推理</h3>
+          <p>通过模块化算法执行预测、检索、规划或判别。</p>
+        </article>
+        <article>
+          <h3>结果校准</h3>
+          <p>结合置信度与约束检查，提升输出可靠性。</p>
+        </article>
+      </div>
+      <aside class="notes">把方法讲成流水线：输入先被整理，再建模，之后推理，最后校准。每个模块后面都可以替换成真实方法名。</aside>
+      <footer>Method Overview <strong>05 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Architecture">
+      <p class="kicker">05 · Architecture</p>
+      <h2>模块解耦，保证实验可复现与组件可替换</h2>
+      <div class="architecture">
+        <div class="arch-stack">
+          <article>
+            <h3>Data Layer</h3>
+            <p>数据集、标注、采样与预处理。</p>
+          </article>
+          <article>
+            <h3>Eval Layer</h3>
+            <p>指标、基线、统计检验与误差分析。</p>
+          </article>
+        </div>
+        <div class="arch-core">
+          <h3>XXX Core Module</h3>
+          <p>统一承载表示学习、推理逻辑与约束校准。</p>
+        </div>
+        <div class="arch-stack">
+          <article>
+            <h3>Model Layer</h3>
+            <p>主模型、轻量模块、消融组件。</p>
+          </article>
+          <article>
+            <h3>Output Layer</h3>
+            <p>结果报告、可视化解释与下游接口。</p>
+          </article>
+        </div>
+      </div>
+      <aside class="notes">强调架构解耦的好处：实验可复现、组件可替换、后续扩展成本低。</aside>
+      <footer>Architecture <strong>06 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Experimental Design">
+      <p class="kicker">06 · Experimental Design</p>
+      <h2>用统一协议比较主方法、基线与关键变体</h2>
+      <div class="experiment-table">
+        <div class="head">实验维度</div>
+        <div class="head">设计目的</div>
+        <div class="head">观察指标</div>
+        <article>
+          <h3>主实验</h3>
+          <p>验证整体方法是否优于强基线。</p>
+        </article>
+        <article>
+          <h3>统一数据划分</h3>
+          <p>避免评估偏差，保证结果可复现。</p>
+        </article>
+        <article>
+          <h3>Accuracy / F1</h3>
+          <p>衡量核心任务表现。</p>
+        </article>
+        <article>
+          <h3>消融实验</h3>
+          <p>定位每个模块的真实贡献。</p>
+        </article>
+        <article>
+          <h3>单变量替换</h3>
+          <p>逐项移除或替换核心组件。</p>
+        </article>
+        <article>
+          <h3>Latency / Cost</h3>
+          <p>衡量实际部署可行性。</p>
+        </article>
+      </div>
+      <aside class="notes">说明实验协议如何保证公平比较。提醒听众表格中仍是模板内容，真实汇报应替换为具体数据集和指标。</aside>
+      <footer>Experimental Design <strong>07 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Main Results">
+      <p class="kicker">07 · Main Results</p>
+      <h2>XXX 在核心指标上取得稳定提升</h2>
+      <div class="bars">
+        <div class="bar-row">
+          <span>Baseline A</span>
+          <div><i style="width: 62%"></i></div>
+          <strong>62%</strong>
+        </div>
+        <div class="bar-row">
+          <span>Baseline B</span>
+          <div><i style="width: 74%"></i></div>
+          <strong>74%</strong>
+        </div>
+        <div class="bar-row">
+          <span>Variant</span>
+          <div><i style="width: 81%"></i></div>
+          <strong>81%</strong>
+        </div>
+        <div class="bar-row highlight">
+          <span>XXX</span>
+          <div><i style="width: 88%"></i></div>
+          <strong>88%</strong>
+        </div>
+      </div>
+      <p class="note">结果示例使用占位数据。替换为真实实验结果后，应同步更新指标、置信区间与显著性说明。</p>
+      <aside class="notes">讲结果时先说结论，再解释对比对象。不要逐个读数字，突出 XXX 相对基线的提升。</aside>
+      <footer>Main Results <strong>08 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Discussion">
+      <p class="kicker">08 · Discussion</p>
+      <h2>方法有效，但仍需关注泛化、成本与边界条件</h2>
+      <div class="timeline">
+        <article>
+          <h3>泛化性</h3>
+          <p>跨数据集、跨领域迁移仍需更多验证。</p>
+        </article>
+        <article>
+          <h3>成本</h3>
+          <p>复杂模块可能增加训练和推理开销。</p>
+        </article>
+        <article>
+          <h3>解释性</h3>
+          <p>中间状态需要更清晰的可视化证据。</p>
+        </article>
+        <article>
+          <h3>鲁棒性</h3>
+          <p>极端样本和噪声输入可能影响稳定性。</p>
+        </article>
+      </div>
+      <p class="lead compact">下一步应围绕更强基线、更细粒度误差分析与真实场景试点评估展开。</p>
+      <aside class="notes">主动承认边界条件，说明这些限制不会推翻主要结论，但决定了下一步工作。</aside>
+      <footer>Discussion <strong>09 / 10</strong></footer>
+    </section>
+
+    <section class="slide" data-title="Conclusion">
+      <p class="kicker">09 · Conclusion</p>
+      <h2>XXX 提供了一条兼顾性能、效率与可靠性的研究路径</h2>
+      <div class="takeaways">
+        <article>
+          <h3>清晰问题建模</h3>
+          <p>将复杂任务拆解为可验证、可复现、可比较的研究问题。</p>
+        </article>
+        <article>
+          <h3>模块化方法设计</h3>
+          <p>通过解耦架构定位核心贡献，并降低后续扩展成本。</p>
+        </article>
+        <article>
+          <h3>系统性实验验证</h3>
+          <p>用主实验、消融和误差分析支撑结论。</p>
+        </article>
+      </div>
+      <p class="thanks">Thank you. Questions are welcome.</p>
+      <aside class="notes">结束时回到三条 takeaways。留出提问时间，准备回答方法泛化、实验公平性和部署成本。</aside>
+      <footer>Conclusion <strong>10 / 10</strong></footer>
+    </section>
+  </main>
+
+  <div class="presenter-progress" aria-hidden="true"><span></span></div>
+  <div class="laser-pointer" aria-hidden="true"></div>
+  <canvas class="ink-layer" aria-hidden="true"></canvas>
+  <div class="tool-status" aria-live="polite"></div>
+  <div class="presenter-hint">E 编辑 · Ctrl+S 保存 · F 全屏 · V 演讲者视图</div>
+</body>
+</html>

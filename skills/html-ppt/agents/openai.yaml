@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML PPT"
+  short_description: "生成、迭代并导出原生 HTML 学术汇报 PPT"
+  default_prompt: "Use $html-ppt to create or refine a native HTML/CSS academic presentation and export a single-file HTML when ready."
