@@ -30,6 +30,7 @@
   let currentIndex = 0;
   let thumbnailButtons = [];
   let thumbnailPreviews = [];
+  let browseNoteCards = [];
   let editorButtons = {};
   let fileHandle = null;
   let isDirty = false;
@@ -115,6 +116,38 @@
     preview.replaceChildren(clone);
   }
 
+  function renderBrowseNote(index, targetCard = null) {
+    const slide = slides[index];
+    const card = targetCard || browseNoteCards[index];
+    if (!slide || !card) return;
+
+    const title = getSlideTitle(index);
+    const notes = getSlideNotes(index);
+    card.querySelector(".browse-notes-title").textContent = title;
+    card.querySelector(".browse-notes-text").textContent = notes;
+  }
+
+  function buildBrowseNotes() {
+    browseNoteCards = slides.map((slide, index) => {
+      const card = document.createElement("aside");
+      const label = document.createElement("span");
+      const title = document.createElement("p");
+      const text = document.createElement("p");
+
+      card.className = "browse-notes";
+      card.setAttribute("aria-label", `Speaker notes for slide ${index + 1}`);
+      label.className = "browse-notes-label";
+      label.textContent = "SPEAKER NOTES";
+      title.className = "browse-notes-title";
+      text.className = "browse-notes-text";
+
+      card.append(label, title, text);
+      slide.insertAdjacentElement("afterend", card);
+      renderBrowseNote(index, card);
+      return card;
+    });
+  }
+
   function updateThumbnailLabel(index) {
     const label = thumbnailButtons[index]?.querySelector(".thumb-label");
     if (label) {
@@ -125,6 +158,10 @@
   function refreshThumbnail(index) {
     renderThumbnailPreview(thumbnailPreviews[index], slides[index]);
     updateThumbnailLabel(index);
+  }
+
+  function refreshBrowseNote(index) {
+    renderBrowseNote(index);
   }
 
   function buildThumbnails() {
@@ -195,6 +232,7 @@
       const isActive = index === currentIndex;
       button.classList.toggle(activeClass, isActive);
       button.setAttribute("aria-current", isActive ? "true" : "false");
+      browseNoteCards[index]?.classList.toggle(activeClass, isActive);
     });
 
     if (!document.body.classList.contains(presentingClass)) {
@@ -250,6 +288,10 @@
     if (nextTitleSlot) nextTitleSlot.textContent = nextIndex === currentIndex ? "End" : getSlideTitle(nextIndex);
     if (progressSlot) progressSlot.style.width = `${((currentIndex + 1) / slides.length) * 100}%`;
     if (timerSlot) timerSlot.textContent = formatElapsed(Date.now() - startedAt);
+
+    speakerWindow.requestAnimationFrame?.(() => {
+      speakerWindow.updateSpeakerPreviewScales?.();
+    });
   }
 
   function openSpeakerView() {
@@ -260,12 +302,6 @@
     }
 
     const baseHref = document.baseURI.replace(/"/g, "%22");
-    const currentPreviewWidth = 640;
-    const currentPreviewHeight = currentPreviewWidth * (slideHeight / slideWidth);
-    const currentPreviewScale = currentPreviewWidth / slideWidth;
-    const nextPreviewWidth = 320;
-    const nextPreviewHeight = nextPreviewWidth * (slideHeight / slideWidth);
-    const nextPreviewScale = nextPreviewWidth / slideWidth;
 
     speakerWindow.document.open();
     speakerWindow.document.write(`<!DOCTYPE html>
@@ -277,25 +313,29 @@
   <link rel="stylesheet" href="./style.css" />
   <style>
     :root { --slide-width: ${slideWidth}px; --slide-height: ${slideHeight}px; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
     body { margin: 0; background: #111827; color: #e5e7eb; font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif; }
-    .speaker-shell { display: grid; grid-template-columns: 1.45fr 0.9fr; gap: 18px; height: 100vh; padding: 18px; }
+    .speaker-shell { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.9fr); gap: 18px; height: 100vh; padding: 18px; overflow: hidden; }
     .speaker-main, .speaker-side, .speaker-notes { border: 1px solid #334155; border-radius: 8px; background: #0f172a; }
-    .speaker-main { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+    .speaker-main { display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; min-height: 0; }
     .speaker-head { display: flex; justify-content: space-between; gap: 16px; padding: 14px 16px; border-bottom: 1px solid #334155; }
     .speaker-title { font-size: 18px; font-weight: 800; }
     .speaker-meta { color: #93c5fd; font-size: 16px; font-weight: 800; }
-    .speaker-preview { position: relative; align-self: start; width: ${currentPreviewWidth}px; height: ${currentPreviewHeight}px; margin: 18px auto; overflow: hidden; background: #fff; }
-    .speaker-preview .slide { position: absolute; top: 0; left: 0; box-shadow: none; transform: scale(${currentPreviewScale}); transform-origin: top left; }
-    .speaker-preview .slide.active { display: var(--slide-display); }
-    .speaker-side { display: grid; grid-template-rows: auto auto 1fr; gap: 16px; padding: 16px; min-width: 0; }
+    .speaker-preview-shell { display: grid; place-items: center; min-width: 0; min-height: 0; padding: 18px; overflow: hidden; }
+    .speaker-preview,
+    .speaker-next-preview { position: relative; width: var(--preview-width, 320px); height: var(--preview-height, 180px); overflow: hidden; background: #fff; }
+    .speaker-preview .slide,
+    .speaker-next-preview .slide { position: absolute; top: 0; left: 0; width: ${slideWidth}px; height: ${slideHeight}px; box-shadow: none; transform: scale(var(--preview-scale, 0.25)); transform-origin: top left; }
+    .speaker-preview .slide.active,
+    .speaker-next-preview .slide.active { display: var(--slide-display); }
+    .speaker-side { display: grid; grid-template-rows: auto minmax(0, 0.42fr) auto minmax(0, 1fr); gap: 16px; padding: 16px; min-width: 0; min-height: 0; }
     .speaker-timer { font-size: 34px; font-weight: 900; color: #fff; }
     .speaker-progress { height: 8px; overflow: hidden; border-radius: 999px; background: #334155; }
     .speaker-progress span { display: block; width: 0%; height: 100%; background: linear-gradient(90deg, #2f6fed, #00a6c8); }
     .speaker-next-label { margin: 0 0 10px; color: #cbd5e1; font-size: 14px; font-weight: 800; }
-    .speaker-next-preview { position: relative; width: ${nextPreviewWidth}px; height: ${nextPreviewHeight}px; overflow: hidden; background: #fff; }
-    .speaker-next-preview .slide { position: absolute; top: 0; left: 0; box-shadow: none; transform: scale(${nextPreviewScale}); transform-origin: top left; }
-    .speaker-next-preview .slide.active { display: var(--slide-display); }
-    .speaker-notes { padding: 16px; color: #f8fafc; font-size: 22px; line-height: 1.48; white-space: pre-wrap; }
+    .speaker-next-shell { min-width: 0; min-height: 0; overflow: hidden; }
+    .speaker-notes { min-height: 0; overflow: auto; padding: 16px; color: #f8fafc; font-size: 22px; line-height: 1.48; white-space: pre-wrap; }
     .speaker-controls { display: flex; gap: 10px; margin-top: 12px; }
     .speaker-controls button { padding: 8px 12px; border: 0; border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer; font-weight: 800; }
   </style>
@@ -310,16 +350,18 @@
         </div>
         <div class="speaker-timer" data-speaker-timer>00:00</div>
       </div>
-      <div class="speaker-preview" data-speaker-current></div>
+      <div class="speaker-preview-shell">
+        <div class="speaker-preview" data-speaker-current></div>
+      </div>
     </section>
     <aside class="speaker-side">
       <div class="speaker-progress"><span data-speaker-progress></span></div>
-      <div>
+      <div class="speaker-next-shell">
         <p class="speaker-next-label">Next: <span data-speaker-next-title></span></p>
         <div class="speaker-next-preview" data-speaker-next></div>
       </div>
+      <p class="speaker-next-label">Notes</p>
       <div>
-        <p class="speaker-next-label">Notes</p>
         <div class="speaker-notes" data-speaker-notes></div>
         <div class="speaker-controls">
           <button onclick="opener.Presenter.prev()">Prev</button>
@@ -329,6 +371,89 @@
       </div>
     </aside>
   </div>
+  <script>
+    const slideWidth = ${slideWidth};
+    const slideHeight = ${slideHeight};
+    const wheelThreshold = 90;
+    let wheelBuffer = 0;
+    let wheelTimer = null;
+
+    function getPresenter() {
+      return window.opener && !window.opener.closed ? window.opener.Presenter : null;
+    }
+
+    function fitPreview(shellSelector, previewSelector, labelReserve = 0) {
+      const shell = document.querySelector(shellSelector);
+      const preview = document.querySelector(previewSelector);
+      if (!shell || !preview) return;
+
+      const rect = shell.getBoundingClientRect();
+      const availableWidth = Math.max(1, rect.width);
+      const availableHeight = Math.max(1, rect.height - labelReserve);
+      const scale = Math.max(0.05, Math.min(availableWidth / slideWidth, availableHeight / slideHeight));
+
+      preview.style.setProperty("--preview-scale", String(scale));
+      preview.style.setProperty("--preview-width", slideWidth * scale + "px");
+      preview.style.setProperty("--preview-height", slideHeight * scale + "px");
+    }
+
+    window.updateSpeakerPreviewScales = function updateSpeakerPreviewScales() {
+      fitPreview(".speaker-preview-shell", ".speaker-preview", 0);
+      fitPreview(".speaker-next-shell", ".speaker-next-preview", 32);
+    };
+
+    function turn(delta) {
+      const presenter = getPresenter();
+      if (!presenter) return;
+      if (delta > 0) presenter.next();
+      if (delta < 0) presenter.prev();
+    }
+
+    document.addEventListener("wheel", (event) => {
+      event.preventDefault();
+      wheelBuffer += Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+      window.clearTimeout(wheelTimer);
+      wheelTimer = window.setTimeout(() => {
+        wheelBuffer = 0;
+      }, 180);
+
+      while (Math.abs(wheelBuffer) >= wheelThreshold) {
+        turn(wheelBuffer > 0 ? 1 : -1);
+        wheelBuffer += wheelBuffer > 0 ? -wheelThreshold : wheelThreshold;
+      }
+    }, { passive: false });
+
+    document.addEventListener("keydown", (event) => {
+      const presenter = getPresenter();
+      if (!presenter) return;
+
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        presenter.next();
+      } else if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        presenter.prev();
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        presenter.goTo(0);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        presenter.goTo(${slides.length - 1});
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (event.target.closest("button")) return;
+      const preview = event.target.closest(".speaker-preview, .speaker-next-preview");
+      if (!preview) return;
+
+      const rect = preview.getBoundingClientRect();
+      turn(event.clientX < rect.left + rect.width / 2 ? -1 : 1);
+    });
+
+    window.addEventListener("resize", window.updateSpeakerPreviewScales);
+    window.addEventListener("load", window.updateSpeakerPreviewScales);
+  </script>
 </body>
 </html>`);
     speakerWindow.document.close();
@@ -702,6 +827,7 @@
 
     isDirty = true;
     refreshThumbnail(index);
+    refreshBrowseNote(index);
     updateDocumentTitle();
     updateSpeakerView();
     updateEditorUi();
@@ -720,6 +846,7 @@
   function normalizeRuntimeArtifacts(root) {
     root.removeAttribute("style");
     root.querySelector(".presenter-sidebar")?.remove();
+    root.querySelectorAll(".browse-notes").forEach((note) => note.remove());
     clearEditableAttributes(root);
 
     const body = root.querySelector("body");
@@ -1079,6 +1206,7 @@
 
   function init() {
     readSlideSize();
+    buildBrowseNotes();
     buildThumbnails();
 
     const hashIndex = hashToIndex(window.location.hash);
